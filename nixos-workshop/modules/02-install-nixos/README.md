@@ -20,7 +20,45 @@ By the end of this module you will have:
 It is assumed that you have downloaded the [prerequisites and configure your
 computer][prerequisites] before.
 
-If you are running the tutorial on a VirtualBox VM, then you're all set.
+If you are running the tutorial on a VirtualBox VM, then you're almost set.
+
+<details><summary>✋🎯️ At the Melbourne :: C◦mp◦se 2019 Workshop we are running
+a NixOS proxy-cache for the workshop so that the class doesn't become bottle
+necked by internet access speeds. The proxy-cache server name is discoverable by
+the mdns name <code>dymaxion.local</code>. Expand this section for configuration
+instructions. </summary> <p>
+
+You'll need to do two steps:
+
+1. Activate the proxy-cache in the temporary in-memory operating system
+   configuration
+
+```bash
+chmod 644 /etc/nixos/configuration.nix
+vi /etc/nixos/configuration.nix
+```
+
+Add the following lines:
+
+```nix
+services.avahi.enable = true;
+services.avahi.nssmdns = true;
+
+nix.binaryCaches = [
+   "http://dymaxion.local"
+   "https://cache.nixos.org"
+];
+```
+
+Exit your editor and, still as root, activate the configuration:
+
+```bash
+nixos-rebuild switch
+```
+Now run `ping dymaxion.local` to confirm that avahi is functioning and the
+proxy-cache is accessible.
+
+</details>
 
 If you are installing NixOS on your computer as its primary operating system then
 you'll need to [burn the installation ISO to a USB drive or DVD][burn-the-iso]
